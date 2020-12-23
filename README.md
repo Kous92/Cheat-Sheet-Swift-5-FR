@@ -2,6 +2,8 @@
 
 Voici un cheat sheet sur le langage Swift (pour Swift 5) avec des notions à réutiliser dans le **CodinGame**, lors de tests techniques ou lors de projets d'applications iOS (iPadOS inclus)/macOS/watchOS/tvOS avec Xcode. Idéal pour tout débutant sur le langage Swift.
 
+![Swift logo](https://codabee.com/wp-content/uploads/2019/05/1280px-Swift_logo_with_text.svg_.png)
+
 ## Table des matières
 
 - [Syntaxe de base](#basesyntax)
@@ -139,6 +141,25 @@ var x = 2
 - `*` pour la multiplication -> `a * b`
 - `/` pour la division -> `a / b`
 - `%` pour le modulo (reste de la division euclidienne) -> `a % b`
+
+**Version condensée pour effectuer une opération sur le nombre lui-même avec un autre:**
+- `+=` pour l'addition (ou la concaténation avec les chaînes de caractères) -> (`a += b` au lieu de `a = a + b`)
+- `-=` pour la soustraction -> (`a -= b` au lieu de `a = a - b`)
+- `*=` pour la multiplication -> (`a *= b` au lieu de `a = a * b`)
+- `/=` pour la division -> (`a /= b` au lieu de `a = a / b`)
+
+**ATTENTION: L'OPÉRATEUR D'INCRÉMENTATION DE 1 (`++`) OU DE DÉCRÉMENTATION DE 1 (`--`) EXISTANT EN C, C++, JAVA, PHP, JAVASCRIPT,... N'EXISTE PAS EN SWIFT, LE COMPILATEUR SWIFT VA RÂLER !!!**
+```swift
+var a = 1
+
+// Incrémentation de 1
+a++ // INTERDIT !!!
+a += 1 // VALIDE: a = 2
+
+// Décrémentation de 1
+a-- // INTERDIT
+a -= 1 // VALIDE: a = 0
+```
 
 **ATTENTION: le compilateur Swift râle si vous effectuez des opérations mathématiques avec des types différents l'un de l'autre !!! Il est donc interdit de faire par exemple une multiplication entre un `Int` et un `Double` !** Vous devrez donc être explicite avec des conversions de type (transtypage) pour effectuer des opérations comme ça:
 ```swift
@@ -399,4 +420,51 @@ En Swift, les sous-chaînes ont un type défini: `Substring`. Elles s'utilisent 
 
 ### Caractères
 
-## <a name="basesyntax"></a>Optionnels
+Comme les autres langages, Swift a son propre type pour les caractères: `Character`. Une chaîne `String` est composée de caractères `Character`.
+```swift
+let str = "Hello"
+
+for c in str {
+    print(c) // H -> e -> l -> l -> o
+}
+```
+
+Pour déclarer une variable:
+```swift
+let c: Character = "c"
+```
+
+Avec un tableau de `Character`, en le passant en argument du constructeur, il est possible de le transformer en `String`:
+```swift
+let caractères: [Character] = ["H", "e", "l", "l", "o"]
+let str = String(caractères)
+
+print(str) // "Hello"
+```
+
+**ATTENTION: VOUS NE POUVEZ PAS DIRECTEMENT UTILISER UN `Character` POUR TOUT ÉLÉMENT UTILISANT LE TYPE `String` ! VOUS DEVEZ LE CONVERTIR EN STRING:**
+```swift
+let c: Character = "c" // Avec let c: "c", ce sera un String. ATTENTION donc dans ce cas particulier !
+let s = String(c)
+```
+
+Si la chaîne ne contient qu'un seul caractère, la conversion de `String` vers `Character` est possible
+```swift
+let s = "c"
+let c = Character(s) // AUTORISÉ
+
+let s1 = "cc"
+let c1 = Character(s) // ERREUR !
+```
+
+Il est aussi possible de concaténer un `Character` dans un `String`:
+```swift
+var s = "Hello "
+let c:  Character = "!"
+
+s.append(c) // "Hello !"
+
+s += c // INTERDIT !
+```
+
+## <a name="optionals"></a>Optionnels

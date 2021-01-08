@@ -25,6 +25,7 @@ Swift est un langage de programmation créé par Apple et utilisé depuis 2014, 
     + [Substring (sous-chaîne)](#substring)
     + [Caractères (sous-chaîne)](#character)
 - [Optionnels](#optionals)
+- [Fonctions](#functions)
 
 ## <a name="basesyntax"></a>Syntaxe de base
 
@@ -530,7 +531,7 @@ if b != nil {
 
 Swift permet de déballer l'optionnel de façon sûre et pratique grâce à la condition `if let`. Par rapport aux conditions classiques, ici on utilise l'opérateur d'affectation pour vérifier que l'optionnel contienne une valeur. Ici, il n'y aura donc pas besoin de faire du déballage forcé avec "!".
 ```swift
-var a: Int? = 3 // nil par défaut
+var a: Int? = 3
 
 // Équivaut à if a != nil, b = a! 
 if let b = a {
@@ -542,10 +543,75 @@ if let b = a {
 
 En condensé, il existe l'équivalent du `if-else` en ternaire, on utilise l'opérateur `??`
 ```swift
-var a: Int? = 3 // nil par défaut
+var a: Int? = 3
 
-// Équivaut à if a != nil, b = a! 
 print(a ?? "Pas de valeur")
 
 let b = a ?? nil
+```
+
+## <a name="functions"></a>Fonctions
+
+Comme dans chaque langage, la syntaxe de base devient lourde et la question de structurer son code est capitale, les fonctions interviennent. En Swift, pour déclarer une fonction:
+
+- Sans paramètres et sans type de retour:
+```swift
+func nomFonction() {
+    // Contenu de la fonction
+}
+
+// Appel de la fonction
+nomFonction()
+```
+
+**Exemple de simple affichage**:
+```swift
+func direBonjour() {
+    print("Bonjour")
+}
+
+// Appel de la fonction
+direBonjour() // Affiche "Bonjour"
+```
+
+- Avec paramètres:
+```swift
+// Un seul paramètre
+func fonction1(nom: type) {
+    // Contenu de la fonction
+}
+
+// Plusieurs paramètres
+func fonction2(nom1: type1, nom2: type2) {
+    // Contenu de la fonction
+}
+// Appel de la fonction
+fonction1(nom: a)
+fonction2(nom1: a, nom2: b)
+```
+
+Pour omettre les labels du type `nom: valeur` à l'appel de la fonction:
+```swift
+func fonction1(_ type nom) {
+    // Contenu de la fonction
+}
+
+fonction1(a)
+````
+
+**Exemple**:
+```swift
+func addition(a: Int, b: Int) {
+    print(\(a + b))
+}
+
+// Appel de la fonction
+addition(a: x, b: y) // Affiche la valeur de a + b
+
+func multiplication(_ a: Int, _ b: Int) {
+    print(\(a * b))
+}
+
+// Appel de la fonction sans labels
+addition(a, b) // Affiche la valeur de a + b
 ```

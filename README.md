@@ -2,6 +2,10 @@
 
 Voici un cheat sheet sur le langage Swift (pour Swift 5) avec des notions à réutiliser dans le **CodinGame**, lors de tests techniques ou lors de projets d'applications iOS (iPadOS inclus)/macOS/watchOS/tvOS avec Xcode. Idéal pour tout débutant sur le langage Swift.
 
+Swift est un langage de programmation créé par Apple et utilisé depuis 2014, qui se veut performant et sûr (c'est un langage fortement typé). Swift est un langage multi-paradigmes et orienté objet, interopérable avec le langage Objective-C, et également [open source](https://github.com/apple/swift).
+
+**Dernière version du langage Swift: 5.3**
+
 ![Swift logo](https://codabee.com/wp-content/uploads/2019/05/1280px-Swift_logo_with_text.svg_.png)
 
 ## Table des matières
@@ -18,6 +22,8 @@ Voici un cheat sheet sur le langage Swift (pour Swift 5) avec des notions à ré
     + [Boucle pour (for)](#for)
     + [Boucle tant que (while/repeat-while)](#while)
 - [Chaînes de caractères](#strings)
+    + [Substring (sous-chaîne)](#substring)
+    + [Caractères (sous-chaîne)](#character)
 - [Optionnels](#optionals)
 
 ## <a name="basesyntax"></a>Syntaxe de base
@@ -31,7 +37,7 @@ print("Hello world !")
 
 ## <a name="variables"></a>Variables
 
-Comme en JavaScript, on utilise `var`pour une variable dont son contenu est modifiable et `let`pour des constantes dont son contenu ne peut pas changer. Utilisez `let` en priorité s'il n'y a pas de modifications à faire.
+Comme en JavaScript, on utilise `var`pour une variable dont son contenu est modifiable et `let` pour des constantes dont son contenu ne peut pas changer. Utilisez `let` en priorité s'il n'y a pas de modifications à faire.
 
 ### Syntaxe
 ```swift
@@ -189,7 +195,7 @@ print(!a) // false
 
 ### Opérateurs d'intervalles
 - `..<`: Intervalle semi-ouverte (la borne supérieure est exclue de l'intervalle) (`a ..< b`)
-- `...`: Intervalle fermée (la borne supérieure est incluse dans l'intervalle) (`a ..< b`)
+- `...`: Intervalle fermée (la borne supérieure est incluse dans l'intervalle) (`a ... b`)
 
 ### Opérateurs d'intervalles (intervalle d'un côté)
 - `[n...]`: Intervalle ouverte de l'indice n au dernier indice
@@ -241,22 +247,18 @@ On peut faire plus simple avec la structure "selon" (`switch`) avec différentes
 ```swift
 let codeHttp = 200
 
+// Il n'est pas nécessaire d'utiliser le mot-clé break comme le font les autres langages.
 switch codeHttp {
     case 200:
         print("Succès")
-    break
     case 403:
         print("Erreur 403: Accès refusé")
-    break
     case 404:
         print("Erreur 404: la page n'existe pas")
-    break
     case 500:
         print("Erreur 500: Erreur serveur")
-    break
     default:
         print("Erreur inconnue")
-    break
 }
 ```
 
@@ -280,6 +282,21 @@ if a < 10 || b < 10 {
 if !(a < 10 && b < 10) {
     print("OK")
 }
+```
+
+Pour des cas d'instructions simples par rapport à un bloc `if - else`, l'opérateur ternaire du type `a ? b : c`s'avère utile
+```swift
+// Le if-else de base
+var a = 5
+
+if a > 5 {
+    print("OK")
+} else {
+    print("NOT OK")
+}
+
+// L'équivalent en ternaire
+(a > 5) ? print("OK") : print("NOT OK")
 ```
 
 ### <a name="if"></a>Boucle pour (for)
@@ -414,11 +431,11 @@ let str = "123456789"
 let n = Int(number)! // ATTENTION, Int(string) retourne Int?
 ```
 
-### Sous-chaînes (Substring)
+### <a name="substring"></a>Sous-chaînes (Substring)
 
 En Swift, les sous-chaînes ont un type défini: `Substring`. Elles s'utilisent de façon temporaire avant d'être converties en `String` avec son constructeur dédié.
 
-### Caractères
+### <a name="character"></a>Caractères
 
 Comme les autres langages, Swift a son propre type pour les caractères: `Character`. Une chaîne `String` est composée de caractères `Character`.
 ```swift
@@ -468,3 +485,67 @@ s += c // INTERDIT !
 ```
 
 ## <a name="optionals"></a>Optionnels
+
+Les optionnels sont des contenant de type générique qui peuvent contenir ou non une valeur. Par rapport aux autres langages où on utilise `null` pour signifier l'absence de valeur, Swift se veut sûr en s'assurant que chaque variable contienne une valeur lorsqu'elle doit être exploitée afin de réduire le plus possible le cas de crashs et de bugs. Pour déclarer un type optionnel, on écrit le nom du type suivi d'un `?`. Si l'optionnel ne contient rien, on lui affecte la valeur `nil` (équivalent à `null`), attribuée par défaut si aucune valeur est fournie.
+
+```swift
+var a: Int? // nil par défaut
+var b: String? = nil // nil explicite
+var c: Double? = 10.0 // Optionnel contenant une valeur
+
+print(c) // Affiche Optional(10.0)
+```
+
+### Déballage d'un optionnel (accéder à sa valeur): déballage forcé
+
+Dans un optionnel, pour accéder à son contenu, il faut le "déballer" (unwrap), et on utilise `!` après le nom de la variable, de l'appel du constructeur ou d'une fonction retournant une valeur optionnelle. **ATTENTION: DE CETTE FAÇON DIRECTE, VOUS DEVEZ ÊTRE ABSOLUMENT SÛR ET CERTAIN QUE L'OPTIONNEL CONTIENNE BIEN UNE VALEUR, L'APPLICATION CRASHE DANS LE CAS CONTRAIRE SI L'OPTIONNEL NE CONTIENT RIEN (`nil`) !!!**.
+
+```swift
+var a: Int? = 3 // nil par défaut
+var b: String? = nil // nil explicite
+
+print(a) // Affiche Optional(3)
+print(a!) // Affiche 3
+
+// DANGER: CRASH DE L'APPLICATION, car b vaut `nil`.
+print(b!)
+```
+
+Pour plus de sûreté avec le déballage forcé, on peut utiliser une condition pour vérifier si l'optionnel contient bien une valeur:
+```swift
+var a: Int? = 3 // nil par défaut
+var b: String? = nil // nil explicite
+
+if a != nil {
+    print(a!) // 3
+}
+
+// CRASH ÉVITÉ
+if b != nil {
+    print(b) // DANGER: CRASH DE L'APPLICATION, car b vaut `nil`.
+}
+```
+
+### Déballage d'un optionnel de façon sûre: if let
+
+Swift permet de déballer l'optionnel de façon sûre et pratique grâce à la condition `if let`. Par rapport aux conditions classiques, ici on utilise l'opérateur d'affectation pour vérifier que l'optionnel contienne une valeur. Ici, il n'y aura donc pas besoin de faire du déballage forcé avec "!".
+```swift
+var a: Int? = 3 // nil par défaut
+
+// Équivaut à if a != nil, b = a! 
+if let b = a {
+    print(b) // 3
+} else {
+    print("Pas de valeur")
+}
+```
+
+En condensé, il existe l'équivalent du `if-else` en ternaire, on utilise l'opérateur `??`
+```swift
+var a: Int? = 3 // nil par défaut
+
+// Équivaut à if a != nil, b = a! 
+print(a ?? "Pas de valeur")
+
+let b = a ?? nil
+```

@@ -26,6 +26,10 @@ Swift est un langage de programmation créé par Apple et utilisé depuis 2014, 
     + [Caractères (sous-chaîne)](#character)
 - [Optionnels](#optionals)
 - [Fonctions](#functions)
+- [Fermetures (Closures)](#closures)
+- [Orienté Objet](#objectoriented)
+    + [Structures](#struct)
+    + [Classes](#class)
 
 ## <a name="basesyntax"></a>Syntaxe de base
 
@@ -260,6 +264,41 @@ switch codeHttp {
         print("Erreur 500: Erreur serveur")
     default:
         print("Erreur inconnue")
+}
+```
+On peut aussi mettre plusieurs valeurs ou des intervalles dans les cas (`case`) du `switch`
+```swift
+let codeHttp = 200
+
+// Il n'est pas nécessaire d'utiliser le mot-clé break comme le font les autres langages.
+switch codeHttp {
+    case 200, 201: // Plusieurs valeurs
+        print("Succès")
+    case (300...399): // Intervalles de valeurs
+        print("Erreur \(codeHttp): Redirection")
+    case 403:
+        print("Erreur 403: Accès refusé")
+    case 404:
+        print("Erreur 404: la page n'existe pas")
+    case 500:
+        print("Erreur 500: Erreur serveur")
+    default:
+        print("Erreur inconnue")
+}
+```
+
+Et aussi, il n'y a pas que le type `Int` pour les cas à vérifier, vous pouvez le faire avec des chaînes de caractères (`String`) ou autre type:
+```swift
+let réponse = "Swift"
+
+// Il n'est pas nécessaire d'utiliser le mot-clé break comme le font les autres langages.
+switch codeHttp {
+    case "Swift":
+        print("Bonne réponse")
+    case "Java", "C#", "Kotlin":
+        print("Mauvaise réponse")
+    default:
+        print("Pas de réponse")
 }
 ```
 
@@ -554,7 +593,7 @@ let b = a ?? nil
 
 Comme dans chaque langage, la syntaxe de base devient lourde et la question de structurer son code est capitale, les fonctions interviennent. En Swift, pour déclarer une fonction:
 
-- Sans paramètres et sans type de retour:
+### Sans paramètres et sans type de retour
 ```swift
 func nomFonction() {
     // Contenu de la fonction
@@ -574,7 +613,9 @@ func direBonjour() {
 direBonjour() // Affiche "Bonjour"
 ```
 
-- Avec paramètres:
+### Avec paramètres
+
+**ATTENTION, lors de l'exploitation du contenu des paramètres, leurs valeurs sont en `let`, donc non modifiables. Il faudra donc dans le corps de la fonction (entre les accolades) déclarer une variable contenant la valeur du paramètre pour pouvoir en modifier son contenu. Vous avez le droit de redéclarer une variable du même nom que le paramètre en entrée.**
 ```swift
 // Un seul paramètre
 func fonction1(nom: type) {
@@ -585,14 +626,15 @@ func fonction1(nom: type) {
 func fonction2(nom1: type1, nom2: type2) {
     // Contenu de la fonction
 }
-// Appel de la fonction
+
+// Appel de la fonction, on fournit les valeurs en tant qu'arguments
 fonction1(nom: a)
 fonction2(nom1: a, nom2: b)
 ```
 
-Pour omettre les labels du type `nom: valeur` à l'appel de la fonction:
+- Pour omettre les labels du type `nom: type` à l'appel de la fonction:
 ```swift
-func fonction1(_ type nom) {
+func fonction1(_ nom: type) {
     // Contenu de la fonction
 }
 
@@ -605,13 +647,116 @@ func addition(a: Int, b: Int) {
     print(\(a + b))
 }
 
-// Appel de la fonction
+// Appel de la fonction, on fournit les valeurs en tant qu'arguments
 addition(a: x, b: y) // Affiche la valeur de a + b
 
 func multiplication(_ a: Int, _ b: Int) {
     print(\(a * b))
 }
 
-// Appel de la fonction sans labels
+// Appel de la fonction sans labels pour les arguments
 addition(a, b) // Affiche la valeur de a + b
 ```
+
+- Dans le cas contraire, pour rendre la fonction plus parlante (utile pour la maintenance par d'autres développeurs):
+```swift
+func fonction1(label nom: type) {
+    // Contenu de la fonction
+}
+
+fonction1(label: a)
+````
+
+**Exemple**:
+```swift
+func originaire(de ville: String) {
+    print("Je suis originaire de \(ville)")
+}
+
+// Appel de la fonction avec le label comme argument
+originaire(de: "Paris") // Affiche "Je suis originaire de Paris"
+```
+
+### Avec type de retour
+
+Pour renvoyer une valeur, on utilise `->` après la parenthèse fermante des paramètres et le type de retour après la flèche:
+```swift
+// Sans paramètres
+func nomFonction() -> typeRetour {
+    // Contenu de la fonction
+    return valeur
+}
+
+// Avec paramètres
+func nomFonction(nom1: type1, nom2: type2, ...) -> typeRetour {
+    // Contenu de la fonction
+    return valeur
+}
+```
+
+**Exemple:**
+```swift
+// Avec paramètres
+func addition(_ a: Int, _ b: Int) -> Int {
+    return a + b
+}
+
+print(addition(3, 5)) // Affiche 8
+```
+
+En pratique, les fonctions contiennent une ou plusieurs lignes d'instructions, des paramètres ou non, et renvoient ou non une valeur.
+
+## <a name="closures"></a>Fermetures (Closures)
+
+## <a name="objectoriented"></a>Orienté Objet
+
+Dans la programmation orientée objet, les classes et structures sont utilisées en Swift. Leurs utilisations sont incontournables et même s'il y a des similarités, il y a tout de même des différences entre les classes et les structures. Dans le code, les objets sont des conteneurs sous forme d'attributs et de fonctions sous forme de méthodes. Dans le développement iOS, tout élément graphique est de type objet, étant des instances de classe (type référence, toute affectation attribuera une référence sur l'instance de classe). En Swift, les types de bases sont aussi de ce type étant donné qu'ils ont des propriétés (exemple la propriété `max` du type `Int` qui donne `Int.max`), mais ils proviennent de structures (type valeur, toute affectation attribuera une copie distincte). 
+
+### Le corps du modèle de lobjet
+```swift
+<typeObjet> nomObjet {
+
+}
+```
+
+`<typeObjet>`: Le remplacer par `class` pour une classe (par référence) ou `struct` pour une structure (par valeur). Avec ceci, vous avez donc créé votre propre type.
+
+**Attributs:** Les propriétés de la classe sont des attributs, on déclare leur contenu avec leur nom, leur type et leur mutabilité (`var`ou `let`)
+```swift
+<typeObjet> nomObjet {
+    var attribut1: type1
+    var attribut2: type2
+    let attribut3: type3 = valeur
+}
+```
+
+**ATTENTION: Tout attribut doit être initialisé d'une valeur, modifiable ou non.** Pour cela, on utilise le constructeur avec `init()` qui peut être avec ou sans paramètres. S'il y a des affectations dans le constructeur, pour cibler les attributs de l'objet, on utilise `self` suivi d'un point (`.`) suivi du nom de l'attribut:
+```swift
+// Par convention, le nom du type d'objet que vous définissez doit commencer par une majuscule puis être en camel case.
+<typeObjet> NomObjet {
+    var attribut1: type1
+    var attribut2: type2
+    let attribut3: type3 = valeur // Constante
+
+    init(attribut1: type1, attribut1: type2) {
+        self.attribut1 = attribut1
+        self.attribut2 = attribut2
+    }
+}
+```
+
+Pour ce qui est des paramètres dans le constructeur, les règles sont les mêmes que pour les fonctions, on utilise `_` omettre les labels du type `nom: type`. Dans le cas contraire, pour rendre le constructeur plus parlant: `label nom: type`.
+
+**Instanciation de l'objet:**
+Une fois le modèle de votre objet (classe ou structure) défini, pour l'instancier, on créé une variable qui va contenir un appel du constructeur de l'objet.
+- Syntaxe:
+```swift
+var objet1 = NomObjet() // Par défaut sans constructeur ou avec constructeur sans paramètres
+var objet2 = NomObjet2(attribut1: valeur1, attribut2: valeur2) // Constructeur avec paramètres, arguments fournis.
+```
+
+`objet1` est donc une instance de `NomObjet`, `objet2` est une instance de `NomObjet2`.
+
+## <a name="struct"></a>Structures
+
+## <a name="class"></a>Classes
